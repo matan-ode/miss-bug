@@ -11,13 +11,19 @@ export const bugService = {
     get,
     remove,
     save,
+    getEmptyBug,
+    getDefaultFilter
 }
 
 
-function query() {
+function query(filterBy = {}) {
     return axios.get(BASE_URL)
         .then(res => res.data)
         .then(bugs => {
+            if (filterBy.title) {
+                const regExp = new RegExp(filterBy.title, 'i')
+                bugs = bugs.filter(bug => regExp.test(bug.title))
+            }
             return bugs
         })
 }
@@ -41,6 +47,15 @@ function save(bug) {
     let queryParams = `?title=${bug.title}`
     if (bug._id) queryParams += `&_id=${bug._id}`
     return axios.get(url + queryParams).then(res => res.data)
+}
+
+
+function getEmptyBug(title = '', description = '') {
+    return { title, description }
+}
+
+function getDefaultFilter() {
+    return { title: '', description: '' }
 }
 
 function _createBugs() {
