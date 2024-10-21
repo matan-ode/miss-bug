@@ -18,15 +18,15 @@ app.use(cookieParser())
 //* READ LIST
 app.get('/api/bug', (req, res) => {
     bugService.query()
-    .then(bugs => res.send(bugs))
-    .catch(err => {
-        loggerService.error('Cannot get bugs', err)
-        res.status(500).send('Cannot get bugs')
-    })
+        .then(bugs => res.send(bugs))
+        .catch(err => {
+            loggerService.error('Cannot get bugs', err)
+            res.status(500).send('Cannot get bugs')
+        })
 })
 
 //* SAVE
-app.get('/api/bug/save', (req, res) => { 
+app.get('/api/bug/save', (req, res) => {
     const bugToSave = {
         _id: req.query._id,
         title: req.query.title,
@@ -44,16 +44,29 @@ app.get('/api/bug/save', (req, res) => {
 //* READ
 app.get('/api/bug/:bugId', (req, res) => {
     const { bugId } = req.params
+    let visitedBugs = req.cookies.visitedBugs ? JSON.parse(req.cookies.visitedBugs) : []
+    if (!visitedBugs.includes(bugId)) visitedBugs.push(bugId)
+    // visitedBugs.push(bugId)
+    if (visitedBugs.time - new Date > 7000) visitedBugs = []
+    const jsonVisitedBugs = JSON.stringify(visitedBugs)
+    res.cookie('visitedBugs', jsonVisitedBugs, { maxAge: 7 * 1000 })
+    console.log('visitedBugs:', visitedBugs)
+
+    if (visitedBugs.length > 3) {
+        return res.status(401).send('Wait for a bit')
+    }
+
     bugService.getById(bugId)
         .then(bug => res.send(bug))
         .catch(err => {
             loggerService.error('Cannot get bug', err)
             res.status(500).send('Cannot get bug')
         })
- })
 
- //* REMOVE
-app.get('/api/bug/:bugId/remove', (req, res) => { 
+})
+
+//* REMOVE
+app.get('/api/bug/:bugId/remove', (req, res) => {
     const { bugId } = req.params
     bugService.remove(bugId)
         .then(() => res.send(`bug ${bugId} removed successfully!`))
@@ -65,11 +78,14 @@ app.get('/api/bug/:bugId/remove', (req, res) => {
 
 
 //* Cookies
-app.get('/puki', (req, res) => {
-    let visitedCount = req.cookies.visitedCount || 0
-    visitedCount++
-    res.cookie('visitedCount', visitedCount, { maxAge: 5 * 1000 })
-    console.log('visitedCount:', visitedCount)
+app.get('/api/bug/:bugId', (req, res) => {
+    const { bugId } = req.params
+
+    let visitedBugs = JSON.parse(req.cookies.visitedBugs) || []
+    if (!visitedBugs.includes(bugId)) visitedBugs.push(bugId)
+    res.cookie('visitedBugs', JSON.stringify(visitedBugs))
+    console.log('visitedBugs:', JSON.stringify(visitedBugs))
+    console.log('hiiii')
     res.send('Hello Puki')
 })
 
