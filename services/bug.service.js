@@ -4,7 +4,6 @@ import { utilService } from './util.service.js'
 const bugs = utilService.readJsonFile('data/bug.json')
 
 
-_createBugs()
 
 export const bugService = {
     query,

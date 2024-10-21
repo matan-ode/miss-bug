@@ -8,16 +8,18 @@ _createBugs()
 
 export const bugService = {
     query,
-    save,
+    get,
     remove,
-    get
+    save,
 }
 
 
 function query() {
     return axios.get(BASE_URL)
-    .then(res => res.data)
-    .then(bugs)
+        .then(res => res.data)
+        .then(bugs => {
+            return bugs
+        })
 }
 
 // function getById(bugId) {
@@ -47,25 +49,25 @@ function _createBugs() {
         bugs = [
             {
                 title: "Infinite Loop Detected",
-                description : "problem when clicking Save",
+                description: "problem when clicking Save",
                 severity: 4,
                 _id: "1NF1N1T3"
             },
             {
                 title: "Keyboard Not Found",
-                description : "problem when clicking Save",
+                description: "problem when clicking Save",
                 severity: 3,
                 _id: "K3YB0RD"
             },
             {
                 title: "404 Coffee Not Found",
-                description : "problem when clicking Save",
+                description: "problem when clicking Save",
                 severity: 2,
                 _id: "C0FF33"
             },
             {
                 title: "Unexpected Response",
-                description : "problem when clicking Save",
+                description: "problem when clicking Save",
                 severity: 1,
                 _id: "G0053"
             }
