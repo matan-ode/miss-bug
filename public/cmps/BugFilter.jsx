@@ -52,8 +52,8 @@ export function BugFilter({ filterBy, onSetFilter }) {
                 <option value="severity">Severity</option>
                 <option value="createdAt">Time</option>
             </select>
-            <input value={sortDir} onChange={handleChange} type="checkbox" id="direction" name="direction"></input>
-            <label for="direction">Direction</label>
+            <input value={sortDir} onChange={handleChange} type="checkbox" id="sortDir" name="sortDir"></input>
+            <label htmlFor="sortDir">Direction</label>
         </section>
     )
 }

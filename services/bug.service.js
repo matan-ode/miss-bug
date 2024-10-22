@@ -18,14 +18,18 @@ function query(filterBy) {
     return Promise.resolve(bugs)
         .then(bugs => {
             if (filterBy.sortBy) {
+                const dir = (filterBy.sortDir === 'true')? -1 : 1
+                console.log(filterBy.sortDir);
+                console.log(dir);
+                
                 if (filterBy.sortBy === 'title') {
-                    bugs.sort((b1, b2) => b1.title.localeCompare(b2.title))
+                    bugs.sort((b1, b2) => dir * (b1.title.localeCompare(b2.title)))
                 }
                 else if (filterBy.sortBy === 'severity'){
-                    bugs.sort((b1, b2) => b1.severity - b2.severity)
+                    bugs.sort((b1, b2) => dir * (b1.severity - b2.severity))
                 }
                 else if (filterBy.sortBy === 'createdAt'){
-                    bugs.sort((b1, b2) => b1.createdAt - b2.createdAt)
+                    bugs.sort((b1, b2) => dir * (b1.createdAt - b2.createdAt))
                 }
             }
             if (filterBy.title) {

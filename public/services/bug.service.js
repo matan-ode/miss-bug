@@ -70,7 +70,7 @@ function getEmptyBug(title = '', description = '') {
 }
 
 function getDefaultFilter() {
-    return { title: '', description: '', pageIdx: 0, sortBy: 'title' }
+    return { title: '', description: '', pageIdx: 0, sortBy: 'title', sortDir: 'false'}
 }
 
 function getFilterFromParams(searchParams = {}) {
@@ -80,6 +80,7 @@ function getFilterFromParams(searchParams = {}) {
         description: searchParams.get('description') || defaultFilter.description,
         pageIdx: searchParams.get('pageIdx') || defaultFilter.pageIdx,
         sortBy: searchParams.get('sortBy') || defaultFilter.sortBy,
+        sortDir: searchParams.get('sortDir') || defaultFilter.sortDir,
     }
 }
 
