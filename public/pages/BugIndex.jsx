@@ -8,9 +8,9 @@ const { Link, useSearchParams } = ReactRouterDOM
 
 export function BugIndex() {
     const [bugs, setBugs] = useState(null)
-    const [filterBy, setFilterBy] = useState(bugService.getFilterFromParams(searchParams))
-
     const [searchParams, setSearchParams] = useSearchParams()
+    
+    const [filterBy, setFilterBy] = useState(bugService.getFilterFromParams(searchParams))
 
 
     useEffect(() => {

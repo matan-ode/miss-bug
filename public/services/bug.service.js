@@ -47,32 +47,37 @@ function get(bugId) {
 }
 
 function remove(bugId) {
-    return axios.get(BASE_URL + bugId + '/remove')
+    return axios.delete(BASE_URL + bugId).then(res => res.data)
+    // return axios.get(BASE_URL + bugId + '/remove')
 }
 
 function save(bug) {
-    const url = BASE_URL + 'save'
-    let queryParams = `?title=${bug.title}`
-    if (bug._id) queryParams += `&_id=${bug._id}`
-    return axios.get(url + queryParams).then(res => res.data)
+    if (bug._id) {
+        return axios.put(BASE_URL, car).then(res => res.data)
+    } else {
+        return axios.post(BASE_URL, car).then(res => res.data)
+    }
+    
+    // const url = BASE_URL + 'save'
+    // let queryParams = `?title=${bug.title}`
+    // if (bug._id) queryParams += `&_id=${bug._id}`
+    // return axios.get(url + queryParams).then(res => res.data)
 }
 
 
-function getEmptyBug(title = '', description = '', createdAt = new Date, labels = []) {
-    return { title, description, createdAt ,labels }
+function getEmptyBug(title = '', description = '') {
+    return { title, description }
 }
 
 function getDefaultFilter() {
-    return { title: '', description: '', createdAt: new Date, labels: [] }
+    return { title: '', description: '' }
 }
 
 function getFilterFromParams(searchParams = {}) {
     const defaultFilter = getDefaultFilter()
     return {
         title: searchParams.get('title') || defaultFilter.title,
-        description: searchParams.get('description') || defaultFilter.description,
-        createdAt: searchParams.get('createdAt') || defaultFilter.createdAt,
-        labels: searchParams.get('labels') || defaultFilter.labels
+        description: searchParams.get('description') || defaultFilter.description
     }
 }
 
