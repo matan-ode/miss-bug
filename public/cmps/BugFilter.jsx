@@ -37,16 +37,23 @@ export function BugFilter({ filterBy, onSetFilter }) {
         onSetFilter(filterByToEdit)
     }
 
-    const { title } = filterByToEdit
+    const { title, sortBy, sortDir } = filterByToEdit
 
     return (
         <section className="bug-filter">
             <h2>Filter Our Bugs</h2>
             <form onSubmit={onSubmitFilter}>
-                <label htmlFor="txt">Vendor</label>
+                <label htmlFor="txt">Title</label>
                 <input value={title} onChange={handleChange} name="title" type="text" id="txt" />
                 <button>Submit</button>
             </form>
+            <select value={sortBy} onChange={handleChange} name="sortBy" id="sortBy">
+                <option value="title">Title</option>
+                <option value="severity">Severity</option>
+                <option value="createdAt">Time</option>
+            </select>
+            <input value={sortDir} onChange={handleChange} type="checkbox" id="direction" name="direction"></input>
+            <label for="direction">Direction</label>
         </section>
     )
 }

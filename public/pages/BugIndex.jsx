@@ -9,7 +9,7 @@ const { Link, useSearchParams } = ReactRouterDOM
 export function BugIndex() {
     const [bugs, setBugs] = useState(null)
     const [searchParams, setSearchParams] = useSearchParams()
-    
+
     const [filterBy, setFilterBy] = useState(bugService.getFilterFromParams(searchParams))
 
 
@@ -56,7 +56,15 @@ export function BugIndex() {
     }
 
     function onSetFilter(filterBy) {
-        setFilterBy(prevFilter => ({ ...prevFilter, ...filterBy }))
+        setFilterBy(prevFilter => ({ ...prevFilter, ...filterBy, pageIdx: 0 }))
+    }
+
+    function onChangePage(diff) {
+        setFilterBy(prevFilter => {
+            let nextPageIdx = +prevFilter.pageIdx + diff
+            if (nextPageIdx < 0) nextPageIdx = 0
+            return { ...prevFilter, pageIdx: nextPageIdx }
+        })
     }
 
     function onEditBug(bug) {
@@ -85,6 +93,11 @@ export function BugIndex() {
                 <button onClick={onAddBug}>Add Bug ⛐</button>
             </section>
             <BugFilter filterBy={filterBy} onSetFilter={onSetFilter} />
+            <section>
+                <button onClick={() => onChangePage(-1)}>-</button>
+                {+filterBy.pageIdx + 1}
+                <button onClick={() => onChangePage(1)}>+</button>
+            </section>
             <main>
                 <BugList bugs={bugs} onRemoveBug={onRemoveBug} onEditBug={onEditBug} />
             </main>

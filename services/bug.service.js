@@ -3,7 +3,7 @@ import { utilService } from './util.service.js'
 
 const bugs = utilService.readJsonFile('data/bug.json')
 // console.log(bugs);
-
+const PAGE_SIZE = 2
 
 
 export const bugService = {
@@ -17,6 +17,17 @@ export const bugService = {
 function query(filterBy) {
     return Promise.resolve(bugs)
         .then(bugs => {
+            if (filterBy.sortBy) {
+                if (filterBy.sortBy === 'title') {
+                    bugs.sort((b1, b2) => b1.title.localeCompare(b2.title))
+                }
+                else if (filterBy.sortBy === 'severity'){
+                    bugs.sort((b1, b2) => b1.severity - b2.severity)
+                }
+                else if (filterBy.sortBy === 'createdAt'){
+                    bugs.sort((b1, b2) => b1.createdAt - b2.createdAt)
+                }
+            }
             if (filterBy.title) {
                 const regExp = new RegExp(filterBy.title, 'i')
                 bugs = bugs.filter(bug => regExp.test(bug.title))
@@ -24,6 +35,10 @@ function query(filterBy) {
             if (filterBy.description) {
                 const regExp = new RegExp(filterBy.description, 'i')
                 bugs = bugs.filter(bug => regExp.test(bug.description))
+            }
+            if (filterBy.pageIdx) {
+                const startIdx = (filterBy.pageIdx * PAGE_SIZE)
+                bugs = bugs.slice(startIdx, startIdx + PAGE_SIZE)
             }
             // if (filterBy.createdAt) {
             //     bugs = bugs.filter(bug => bug.createdAt === filterBy.createdAt)

@@ -18,14 +18,14 @@ app.use(express.json())
 //* Express Routing:
 //* READ LIST
 app.get('/api/bug', (req, res) => {
-    
-    const {title='', description='', createdAt=new Date, labels=[]} = req.query
-    
+
+    const { title = '', description = '', pageIdx = 0, sortBy = 'title' } = req.query
+
     const filterBy = {
         title,
         description,
-        createdAt,
-        labels
+        pageIdx,
+        sortBy
     }
 
     bugService.query(filterBy)

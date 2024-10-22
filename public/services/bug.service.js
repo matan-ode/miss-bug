@@ -70,14 +70,16 @@ function getEmptyBug(title = '', description = '') {
 }
 
 function getDefaultFilter() {
-    return { title: '', description: '' }
+    return { title: '', description: '', pageIdx: 0, sortBy: 'title' }
 }
 
 function getFilterFromParams(searchParams = {}) {
     const defaultFilter = getDefaultFilter()
     return {
         title: searchParams.get('title') || defaultFilter.title,
-        description: searchParams.get('description') || defaultFilter.description
+        description: searchParams.get('description') || defaultFilter.description,
+        pageIdx: searchParams.get('pageIdx') || defaultFilter.pageIdx,
+        sortBy: searchParams.get('sortBy') || defaultFilter.sortBy,
     }
 }
 
