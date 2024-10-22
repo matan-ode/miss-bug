@@ -18,17 +18,14 @@ function query(filterBy) {
     return Promise.resolve(bugs)
         .then(bugs => {
             if (filterBy.sortBy) {
-                const dir = (filterBy.sortDir === 'true')? -1 : 1
-                console.log(filterBy.sortDir);
-                console.log(dir);
-                
+                const dir = (filterBy.sortDir === 'true') ? -1 : 1
                 if (filterBy.sortBy === 'title') {
                     bugs.sort((b1, b2) => dir * (b1.title.localeCompare(b2.title)))
                 }
-                else if (filterBy.sortBy === 'severity'){
+                else if (filterBy.sortBy === 'severity') {
                     bugs.sort((b1, b2) => dir * (b1.severity - b2.severity))
                 }
-                else if (filterBy.sortBy === 'createdAt'){
+                else if (filterBy.sortBy === 'createdAt') {
                     bugs.sort((b1, b2) => dir * (b1.createdAt - b2.createdAt))
                 }
             }
@@ -40,15 +37,18 @@ function query(filterBy) {
                 const regExp = new RegExp(filterBy.description, 'i')
                 bugs = bugs.filter(bug => regExp.test(bug.description))
             }
+            if (filterBy.minSeverity) {
+                bugs = bugs.filter(bug => bug.severity >= filterBy.minSeverity)
+            }
+            if (filterBy.labels) {
+                bugs = bugs.filter(bug => bug.labels.some(label => filterBy.labels.includes(label)))
+            }
             if (filterBy.pageIdx) {
                 const startIdx = (filterBy.pageIdx * PAGE_SIZE)
                 bugs = bugs.slice(startIdx, startIdx + PAGE_SIZE)
             }
             // if (filterBy.createdAt) {
             //     bugs = bugs.filter(bug => bug.createdAt === filterBy.createdAt)
-            // }
-            // if (filterBy.labels) {
-            //     bugs = bugs.filter(bug => bug.labels.some(label => filterBy.labels.includes(label)))
             // }
             return bugs
         })

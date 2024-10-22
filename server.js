@@ -19,14 +19,16 @@ app.use(express.json())
 //* READ LIST
 app.get('/api/bug', (req, res) => {
 
-    const { title = '', description = '', pageIdx = 0, sortBy = 'title', sortDir = 'false'} = req.query
+    const { title = '', description = '', pageIdx = 0, sortBy = 'title', sortDir = 'false', minSeverity = 0, labels = '' } = req.query
 
     const filterBy = {
         title,
         description,
         pageIdx,
         sortBy,
-        sortDir
+        sortDir,
+        minSeverity,
+        labels
     }
 
     bugService.query(filterBy)
