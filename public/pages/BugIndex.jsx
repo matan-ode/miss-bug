@@ -4,13 +4,17 @@ import { BugList } from '../cmps/BugList.jsx'
 import { BugFilter } from '../cmps/BugFilter.jsx'
 
 const { useState, useEffect } = React
+const { Link, useSearchParams } = ReactRouterDOM
 
 export function BugIndex() {
     const [bugs, setBugs] = useState(null)
-    const [filterBy, setFilterBy] = useState(bugService.getDefaultFilter())
+    const [filterBy, setFilterBy] = useState(bugService.getFilterFromParams(searchParams))
+
+    const [searchParams, setSearchParams] = useSearchParams()
 
 
     useEffect(() => {
+        setSearchParams(filterBy)
         loadBugs()
     }, [filterBy])
 

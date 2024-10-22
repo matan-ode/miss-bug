@@ -12,20 +12,25 @@ export const bugService = {
     remove,
     save,
     getEmptyBug,
-    getDefaultFilter
+    getDefaultFilter,
+    getFilterFromParams
 }
 
 
-function query(filterBy = {}) {
-    return axios.get(BASE_URL)
+function query(filterBy = getDefaultFilter()) {
+    
+    return axios.get(BASE_URL, { params: filterBy })
         .then(res => res.data)
-        .then(bugs => {
-            if (filterBy.title) {
-                const regExp = new RegExp(filterBy.title, 'i')
-                bugs = bugs.filter(bug => regExp.test(bug.title))
-            }
-            return bugs
-        })
+
+    // return axios.get(BASE_URL)
+    //     .then(res => res.data)
+        // .then(bugs => {
+        //     if (filterBy.title) {
+        //         const regExp = new RegExp(filterBy.title, 'i')
+        //         bugs = bugs.filter(bug => regExp.test(bug.title))
+        //     }
+        //     return bugs
+        // })
 }
 
 // function getById(bugId) {
@@ -36,6 +41,9 @@ function get(bugId) {
     return axios.get(BASE_URL + bugId)
         .then(res => res.data)
         .then(bug => _setNextPrevBugId(bug))
+        .catch(err => {
+            console.log('err:', err)
+        })
 }
 
 function remove(bugId) {
@@ -50,12 +58,22 @@ function save(bug) {
 }
 
 
-function getEmptyBug(title = '', description = '') {
-    return { title, description }
+function getEmptyBug(title = '', description = '', createdAt = new Date, labels = []) {
+    return { title, description, createdAt ,labels }
 }
 
 function getDefaultFilter() {
-    return { title: '', description: '' }
+    return { title: '', description: '', createdAt: new Date, labels: [] }
+}
+
+function getFilterFromParams(searchParams = {}) {
+    const defaultFilter = getDefaultFilter()
+    return {
+        title: searchParams.get('title') || defaultFilter.title,
+        description: searchParams.get('description') || defaultFilter.description,
+        createdAt: searchParams.get('createdAt') || defaultFilter.createdAt,
+        labels: searchParams.get('labels') || defaultFilter.labels
+    }
 }
 
 function _createBugs() {
@@ -63,28 +81,36 @@ function _createBugs() {
     if (!bugs || !bugs.length) {
         bugs = [
             {
+                _id: "1NF1N1T3",
                 title: "Infinite Loop Detected",
                 description: "problem when clicking Save",
                 severity: 4,
-                _id: "1NF1N1T3"
+                createdAt: 1542107359454,
+                labels: ['critical', 'need-CR', 'dev-branch']
             },
             {
+                _id: "K3YB0RD",
                 title: "Keyboard Not Found",
                 description: "problem when clicking Save",
                 severity: 3,
-                _id: "K3YB0RD"
+                createdAt: 1542107359454,
+                labels: ['critical', 'need-CR', 'dev-branch']
             },
             {
+                _id: "C0FF33",
                 title: "404 Coffee Not Found",
                 description: "problem when clicking Save",
                 severity: 2,
-                _id: "C0FF33"
+                createdAt: 1542107359454,
+                labels: ['critical', 'need-CR', 'dev-branch']
             },
             {
+                _id: "G0053",
                 title: "Unexpected Response",
                 description: "problem when clicking Save",
                 severity: 1,
-                _id: "G0053"
+                createdAt: 1542107359454,
+                labels: ['critical', 'need-CR', 'dev-branch']
             }
         ]
         utilService.saveToStorage(STORAGE_KEY, bugs)
