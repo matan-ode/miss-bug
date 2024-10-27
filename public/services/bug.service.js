@@ -18,19 +18,19 @@ export const bugService = {
 
 
 function query(filterBy = getDefaultFilter()) {
-    
+
     return axios.get(BASE_URL, { params: filterBy })
         .then(res => res.data)
 
     // return axios.get(BASE_URL)
     //     .then(res => res.data)
-        // .then(bugs => {
-        //     if (filterBy.title) {
-        //         const regExp = new RegExp(filterBy.title, 'i')
-        //         bugs = bugs.filter(bug => regExp.test(bug.title))
-        //     }
-        //     return bugs
-        // })
+    // .then(bugs => {
+    //     if (filterBy.title) {
+    //         const regExp = new RegExp(filterBy.title, 'i')
+    //         bugs = bugs.filter(bug => regExp.test(bug.title))
+    //     }
+    //     return bugs
+    // })
 }
 
 // function getById(bugId) {
@@ -53,11 +53,15 @@ function remove(bugId) {
 
 function save(bug) {
     if (bug._id) {
-        return axios.put(BASE_URL, car).then(res => res.data)
+        return axios.put(BASE_URL, bug).then(res => res.data)
     } else {
-        return axios.post(BASE_URL, car).then(res => res.data)
+        return axios.post(BASE_URL, bug).then(res => res.data)
     }
-    
+
+    // console.log(bug)
+    // const method = bug._id ? 'put' : 'post'
+    // return axios[method](BASE_URL + bug._id || '', bug).then(res => res.data)
+
     // const url = BASE_URL + 'save'
     // let queryParams = `?title=${bug.title}`
     // if (bug._id) queryParams += `&_id=${bug._id}`
@@ -70,7 +74,7 @@ function getEmptyBug(title = '', description = '') {
 }
 
 function getDefaultFilter() {
-    return { title: '', description: '', pageIdx: 0, sortBy: 'title', sortDir: 'false', minSeverity: 0, labels: ''}
+    return { title: '', description: '', pageIdx: 0, sortBy: 'time', sortDir: 'false', minSeverity: 0, labels: '' }
 }
 
 function getFilterFromParams(searchParams = {}) {
@@ -96,7 +100,11 @@ function _createBugs() {
                 description: "problem when clicking Save",
                 severity: 4,
                 createdAt: 1542107359454,
-                labels: ['critical', 'need-CR', 'dev-branch']
+                labels: ['critical', 'need-CR', 'dev-branch'],
+                creator: {
+                    _id: "u101",
+                    fullname: "Puki Ja"
+                }
             },
             {
                 _id: "K3YB0RD",
@@ -104,7 +112,11 @@ function _createBugs() {
                 description: "problem when clicking Save",
                 severity: 3,
                 createdAt: 1542107359454,
-                labels: ['critical', 'need-CR', 'dev-branch']
+                labels: ['critical', 'need-CR', 'dev-branch'],
+                creator: {
+                    _id: "u102",
+                    fullname: "Shuki Ka"
+                }
             },
             {
                 _id: "C0FF33",
@@ -112,7 +124,11 @@ function _createBugs() {
                 description: "problem when clicking Save",
                 severity: 2,
                 createdAt: 1542107359454,
-                labels: ['critical', 'need-CR', 'dev-branch']
+                labels: ['critical', 'need-CR', 'dev-branch'],
+                creator: {
+                    _id: "u102",
+                    fullname: "Shuki Ka"
+                }
             },
             {
                 _id: "G0053",
@@ -120,7 +136,11 @@ function _createBugs() {
                 description: "problem when clicking Save",
                 severity: 1,
                 createdAt: 1542107359454,
-                labels: ['critical', 'need-CR', 'dev-branch']
+                labels: ['critical', 'need-CR', 'dev-branch'],
+                creator: {
+                    _id: "u103",
+                    fullname: "Luki La"
+                }
             }
         ]
         utilService.saveToStorage(STORAGE_KEY, bugs)

@@ -38,10 +38,11 @@ export function BugIndex() {
     }
 
     function onAddBug() {
-        const bug = {
-            title: prompt('Bug title?'),
-            severity: +prompt('Bug severity?'),
-        }
+        let bug = {}
+        bug.title = prompt('Bug title?')
+        bug.severity = +prompt('Bug severity?')
+        console.log(bug);
+
         bugService
             .save(bug)
             .then((savedBug) => {

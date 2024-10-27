@@ -3,7 +3,7 @@ import { utilService } from './util.service.js'
 
 const bugs = utilService.readJsonFile('data/bug.json')
 // console.log(bugs);
-const PAGE_SIZE = 2
+const PAGE_SIZE = 4
 
 
 export const bugService = {
@@ -63,20 +63,33 @@ function getById(bugId) {
 function remove(bugId) {
     const bugIdx = bugs.findIndex(bug => bug._id === bugId)
     if (bugIdx < 0) return Promise.reject('Cannot find bug', bugId)
+    
+    const bug = bugs[bugIdx]
+    if (!loggedinUser.isAdmin &&
+        bug.owner._id !== loggedinUser._id) {
+        return Promise.reject('Not your bug')
+    }
     bugs.splice(bugIdx, 1)
     return _saveBugsToFile()
 }
 
-function save(bugToSave) {
+function save(bugToSave, loggedinUser) {
     if (bugToSave._id) {
         const bugIdx = bugs.findIndex(bug => bug._id === bugToSave._id)
+        const bugToUpdate = bugs[bugIdx]
+        if (!loggedinUser.isAdmin &&
+            bugToUpdate.owner._id !== loggedinUser._id) {
+            return Promise.reject('Not your bug')
+        }
         bugs[bugIdx] = bugToSave
     } else {
         bugToSave._id = utilService.makeId()
+        bugToSave.owner = loggedinUser
         bugs.unshift(bugToSave)
     }
 
-    return _saveBugsToFile().then(() => bugToSave)
+    return _saveBugsToFile()
+        .then(() => bugToSave)
 }
 
 function _saveBugsToFile() {
